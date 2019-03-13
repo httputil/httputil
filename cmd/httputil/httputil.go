@@ -29,6 +29,7 @@ func main() {
 
 	for _, code := range httputil.StatusCodes {
 		s.Any(strconv.Itoa(code), httputil.HandleHTTPStatus)
+		s.Any(strconv.Itoa(code)+"/:format", httputil.HandleHTTPStatus)
 	}
 
 	port := os.Getenv("PORT")

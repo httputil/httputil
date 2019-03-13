@@ -78,7 +78,8 @@ var (
 func HandleHTTPStatus(c echo.Context) error {
 	setHeaders(c)
 
-	code, err := strconv.Atoi(c.Path()[1:])
+	paths := strings.Split(c.Path()[1:], "/")
+	code, err := strconv.Atoi(paths[0])
 	if err != nil {
 		return err
 	}
@@ -103,11 +104,23 @@ func HandleHTTPStatus(c echo.Context) error {
 	resp := HTTPStatusResponse{Message: status}
 
 	// Send response
+	format := c.Param("format")
+
 	accept := c.Request().Header.Get(echo.HeaderAccept)
-	switch {
-	case strings.Contains(accept, echo.MIMEApplicationJSON):
+	if format == "" {
+		switch {
+		case strings.Contains(accept, echo.MIMEApplicationJSON):
+			format = "json"
+		case strings.Contains(accept, echo.MIMEApplicationXML), strings.Contains(accept, echo.MIMETextXML):
+			format = "xml"
+		default:
+			format = "plain"
+		}
+	}
+	switch format {
+	case "json":
 		return c.JSON(code, resp)
-	case strings.Contains(accept, echo.MIMEApplicationXML), strings.Contains(accept, echo.MIMETextXML):
+	case "xml":
 		return c.XML(code, resp)
 	default:
 		return c.String(code, resp.Message)
