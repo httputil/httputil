@@ -1,2 +1,2 @@
 # httputil
-A handly HTTP endpoint for Web devs.
+A handy HTTP endpoint for Web devs.
