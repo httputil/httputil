@@ -1,3 +1,6 @@
+// +heroku install ./cmd/httputil/...
+// +heroku goVersion go1.12
+
 module github.com/httputil/httputil
 
 go 1.12
