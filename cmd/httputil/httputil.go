@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"strconv"
 	"syscall"
 	"time"
 
@@ -20,25 +19,14 @@ var (
 )
 
 func main() {
-
-	s := echo.New()
-	s.HideBanner = !Debug
-	s.HidePort = !Debug
-
-	s.Use(middleware.CORS())
-
-	for _, code := range httputil.StatusCodes {
-		s.Any(strconv.Itoa(code), httputil.HandleHTTPStatus)
-		s.Any(strconv.Itoa(code)+"/:format", httputil.HandleHTTPStatus)
+	cfg := DefaultConfig
+	if err := cfg.Load(); err != nil {
+		log.Fatal("load configuration failed: ", err)
 	}
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-
+	s := newServer()
 	go func() {
-		if err := s.Start(":" + port); err != nil && err != http.ErrServerClosed {
+		if err := s.Start(":" + cfg.PORT); err != nil && err != http.ErrServerClosed {
 			log.Fatal("ListenAndServe exited: ", err)
 		}
 	}()
@@ -56,9 +44,33 @@ func main() {
 	log.Print("shutdown completed")
 }
 
-func wrapHandler(h http.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		h.ServeHTTP(c.Response(), c.Request())
-		return nil
+type Config struct {
+	PORT string
+}
+
+func (c *Config) Load() error {
+	if port := os.Getenv("PORT"); port != "" {
+		c.PORT = port
 	}
+	return nil
+}
+
+var DefaultConfig = Config{PORT: "8080"}
+
+func newServer() *echo.Echo {
+	s := echo.New()
+	s.HideBanner = !Debug
+	s.HidePort = !Debug
+
+	s.Use(middleware.CORS())
+
+	for _, r := range httputil.DefaultRoutes {
+		switch {
+		case len(r.Methods) == 0:
+			s.Any(r.Path, r.Handler)
+		default:
+			s.Match(r.Methods, r.Path, r.Handler)
+		}
+	}
+	return s
 }
