@@ -48,7 +48,7 @@ func HandleHTTPStatus(c echo.Context) error {
 		case strings.Contains(accept, echo.MIMEApplicationXML), strings.Contains(accept, echo.MIMETextXML):
 			format = "xml"
 		default:
-			format = "plain"
+			format = "text"
 		}
 	}
 	switch format {
@@ -62,5 +62,5 @@ func HandleHTTPStatus(c echo.Context) error {
 }
 
 type HTTPStatusResponse struct {
-	Message string `json:"message" xml:"message"`
+	Message string `json:"message" xml:"Message"`
 }
