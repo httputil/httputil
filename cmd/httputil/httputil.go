@@ -62,6 +62,7 @@ func newServer() *echo.Echo {
 	s.HideBanner = !Debug
 	s.HidePort = !Debug
 
+	s.Use(middleware.Recover())
 	s.Use(middleware.CORS())
 
 	for _, r := range httputil.DefaultRoutes {
