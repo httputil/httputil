@@ -12,6 +12,7 @@ import (
 	"github.com/httputil/httputil"
 	echo "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/rs/dnscache"
 )
 
 var (
@@ -64,6 +65,7 @@ func newServer() *echo.Echo {
 
 	s.Use(middleware.Recover())
 	s.Use(middleware.CORS())
+	s.Use(httputil.CachedResolverMiddleware(&dnscache.Resolver{Timeout: time.Second}))
 
 	for _, r := range httputil.DefaultRoutes {
 		switch {
