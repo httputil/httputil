@@ -48,7 +48,7 @@ var (
 		http.StatusUnsupportedMediaType,
 		http.StatusRequestedRangeNotSatisfiable,
 		http.StatusExpectationFailed,
-		http.StatusTeapot,
+		//http.StatusTeapot,
 		http.StatusMisdirectedRequest,
 		http.StatusUnprocessableEntity,
 		http.StatusLocked,
