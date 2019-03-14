@@ -88,6 +88,11 @@ func init() {
 			},
 		)
 	}
+
+	DefaultRoutes = append(DefaultRoutes, Route{
+		Path:    "ip",
+		Handler: HandleIP,
+	})
 }
 
 type Route struct {

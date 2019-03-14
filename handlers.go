@@ -64,3 +64,23 @@ func HandleHTTPStatus(c echo.Context) error {
 type HTTPStatusResponse struct {
 	Message string `json:"message" xml:"Message"`
 }
+
+func HandleIP(c echo.Context) error {
+	setHeaders(c)
+	ctx := c.Request().Context()
+	rslv := ResolverFromEcho(c)
+
+	var resp IPResponse
+	resp.IP = c.RealIP()
+	hosts, _ := rslv.LookupAddr(ctx, resp.IP)
+	if len(hosts) > 0 {
+		resp.Host = hosts[0]
+	}
+
+	return c.JSON(http.StatusOK, resp)
+}
+
+type IPResponse struct {
+	Host string `json:"host"`
+	IP   string `json:"ip"`
+}
