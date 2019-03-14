@@ -101,15 +101,13 @@ func setHeaders(c echo.Context) {
 		req    = c.Request()
 		method = req.Method
 		accept = req.Header.Get(echo.HeaderAccept)
-		isTLS  = c.IsTLS()
 		realIP = c.RealIP()
 	)
 
 	rh := c.Response().Header()
 	rh.Set("X-Request-Method", method)
 	rh.Set("X-Request-Accept", accept)
-	rh.Set("X-Request-TLS", boolToHeaderValue(isTLS))
-	rh.Set("X-Real-IP", realIP)
+	rh.Set(echo.HeaderXRealIP, realIP)
 }
 
 func boolToHeaderValue(b bool) string {
