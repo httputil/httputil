@@ -65,6 +65,7 @@ func newServer() *echo.Echo {
 
 	s.Use(middleware.Recover())
 	s.Use(middleware.CORS())
+	s.Use(httputil.NoCacheHeaderMiddleware())
 	s.Use(httputil.CachedResolverMiddleware(&dnscache.Resolver{Timeout: time.Second}))
 
 	for _, r := range httputil.DefaultRoutes {
