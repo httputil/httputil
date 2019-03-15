@@ -9,10 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/httputil/httputil"
-	echo "github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"github.com/rs/dnscache"
+	"github.com/httputil/httputil/handler"
 )
 
 var (
@@ -25,7 +22,7 @@ func main() {
 		log.Fatal("load configuration failed: ", err)
 	}
 
-	s := newServer()
+	s := handler.NewServer(Debug)
 	go func() {
 		if err := s.Start(":" + cfg.PORT); err != nil && err != http.ErrServerClosed {
 			log.Fatal("ListenAndServe exited: ", err)
@@ -57,24 +54,3 @@ func (c *Config) Load() error {
 }
 
 var DefaultConfig = Config{PORT: "8080"}
-
-func newServer() *echo.Echo {
-	s := echo.New()
-	s.HideBanner = !Debug
-	s.HidePort = !Debug
-
-	s.Use(middleware.Recover())
-	s.Use(middleware.CORS())
-	s.Use(httputil.NoCacheHeaderMiddleware())
-	s.Use(httputil.CachedResolverMiddleware(&dnscache.Resolver{Timeout: time.Second}))
-
-	for _, r := range httputil.DefaultRoutes {
-		switch {
-		case len(r.Methods) == 0:
-			s.Any(r.Path, r.Handler)
-		default:
-			s.Match(r.Methods, r.Path, r.Handler)
-		}
-	}
-	return s
-}

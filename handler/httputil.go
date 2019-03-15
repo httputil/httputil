@@ -1,10 +1,13 @@
-package httputil
+package handler
 
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/rs/dnscache"
 )
 
 var (
@@ -53,7 +56,7 @@ var (
 		http.StatusUnprocessableEntity,
 		http.StatusLocked,
 		http.StatusFailedDependency,
-		http.StatusTooEarly,
+		//http.StatusTooEarly,
 		http.StatusUpgradeRequired,
 		http.StatusPreconditionRequired,
 		http.StatusTooManyRequests,
@@ -99,6 +102,27 @@ type Route struct {
 	Methods []string
 	Path    string
 	Handler echo.HandlerFunc
+}
+
+func NewServer(debug bool) *echo.Echo {
+	s := echo.New()
+	s.HideBanner = !debug
+	s.HidePort = !debug
+
+	s.Use(middleware.Recover())
+	s.Use(middleware.CORS())
+	s.Use(NoCacheHeaderMiddleware())
+	s.Use(CachedResolverMiddleware(&dnscache.Resolver{Timeout: time.Second}))
+
+	for _, r := range DefaultRoutes {
+		switch {
+		case len(r.Methods) == 0:
+			s.Any(r.Path, r.Handler)
+		default:
+			s.Match(r.Methods, r.Path, r.Handler)
+		}
+	}
+	return s
 }
 
 func setHeaders(c echo.Context) {
