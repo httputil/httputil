@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>httputil</title>
+        <link rel="canonical" href="https://httputil.dev/">
+        <style>
+            html, body {
+                margin: 0;
+                font-family: sans-serif;
+                line-height: 1.5;
+                color: black;
+                font-size: 18px;
+            }
+
+            body {
+                padding: 1rem 2rem 4px 2rem;
+                max-width: 1400px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            h2 {
+                background: chartreuse;
+                padding: .2em .4em;
+                border-radius: 3px;
+                font-weight: normal;
+            }
+
+            pre.code {
+                background: black;
+                color: gray;
+                padding: 0.5em;
+                white-space: pre-wrap;
+            }
+            pre.code .cmd {
+                color: chartreuse;
+            }
+            pre.code .comment {
+                color: white;
+            }
+            pre.code a {
+                text-decoration: none;
+                color: inherit;
+            }
+        </style>
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62172-21"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-62172-21');
+        </script>
+    </head>
+    <body>
+        <h1>httputil</h1>
+        <h2>A handy HTTP endpoint for Web devs.</h2>
+<pre class="code">
+<span class="comment"># Get your IP</span>
+<span class="cmd">$ curl <a href="/ip">https://httputil.dev/ip</a></span>
+{"host":"example.com", "ip":" 203.0.113.1"}
+
+<span class="comment"># Get status code</span>
+<span class="cmd">$ curl <a href="/200">https://httputil.dev/200</a></span>
+OK
+<span class="cmd">$ curl <a href="/404">https://httputil.dev/404</a></span>
+Not Found
+
+## Get JSON response
+<span class="cmd">$ curl -H 'Accept:application/json' <a href="/200">https://httputil.dev/200</a></span>
+# or
+<span class="cmd">$ curl <a href="/200/json">https://httputil.dev/200/json</a></span> # Accept header will be ignored
+{"message":"OK"}
+
+## Get XML response</span>
+<span class="cmd">$ curl <a href="/200/xml">https://httputil.dev/200/xml</a></span>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;HTTPStatusResponse&gt;&lt;Message&gt;OK&lt;/Message&gt;&lt;/HTTPStatusResponse&gt;
+
+<span class="comment"># Also available at httputil.com</span>
+<span class="cmd">$ curl <a href="https://httputil.com/200">https://httputil.com/200</a></span>
+OK
+
+### We never store any data about your accesses to API. ###</pre>
+        <p>
+            <a href="https://blog.httputil.dev/">see updates</a>, 
+            <a href="https://github.com/httputil/httputil">make a pull request</a> or <a href="https://twitter.com/intent/tweet?related=ka2n%2Cka2nJa&text=&url=https%3A%2F%2Fhttputil.dev&via=ka2n">share</a>.
+        </p>
+    </body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "name": "httputil",
+  "env": {
+    "IS_NOW": "1",
+    "RELEASE": "1"
+  },
+  "builds": [
+    {
+      "src": "now.go",
+      "use": "@now/go@0.3.1-canary.0"
+    },
+    {
+      "src": "/www/**/*",
+      "use": "@now/static"
+    }
+  ],
+  "routes": [
+    {"src": "/(favicon.ico|robots.txt)?", "dest": "www/$1" },
+    {"src": "/(.*)", "dest": "now.go" }
+  ]
+}

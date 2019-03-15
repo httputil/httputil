@@ -1,0 +1,8 @@
+.git
+.gitignore
+README.md
+cmd
+*_test.go
+.env*
+modd.conf
+LICENSE
