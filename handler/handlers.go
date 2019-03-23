@@ -9,7 +9,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func HandleHTTPStatus(c echo.Context) error {
+func HandleHTTPStatus(ec echo.Context) error {
+	c := Wrap(ec)
 	setHeaders(c)
 
 	paths := strings.Split(c.Path()[1:], "/")
@@ -45,6 +46,8 @@ func HandleHTTPStatus(c echo.Context) error {
 		switch {
 		case strings.Contains(accept, echo.MIMEApplicationJSON):
 			format = "json"
+		case strings.Contains(accept, echo.MIMEApplicationMsgpack):
+			format = "msgpack"
 		case strings.Contains(accept, echo.MIMEApplicationXML), strings.Contains(accept, echo.MIMETextXML):
 			format = "xml"
 		default:
@@ -56,13 +59,15 @@ func HandleHTTPStatus(c echo.Context) error {
 		return c.JSON(code, resp)
 	case "xml":
 		return c.XML(code, resp)
+	case "msgpack":
+		return c.Msgpack(code, resp)
 	default:
 		return c.String(code, resp.Message)
 	}
 }
 
 type HTTPStatusResponse struct {
-	Message string `json:"message" xml:"Message"`
+	Message string `json:"message" xml:"Message" codec:"message"`
 }
 
 func HandleIP(c echo.Context) error {
