@@ -60,9 +60,12 @@
         <h2>A handy HTTP endpoint for developers.</h2>
 <pre class="code">
 <span class="comment"># Get your IP</span>
+
 <span class="cmd">$ curl <a href="/ip">https://httputil.dev/ip</a></span>
 {"host":"example.com", "ip":" 203.0.113.1"}
+</pre>
 
+<pre class="code">
 <span class="comment"># Get status code</span>
 <span class="cmd">$ curl <a href="/200">https://httputil.dev/200</a></span>
 OK
@@ -75,11 +78,26 @@ Not Found
 <span class="cmd">$ curl <a href="/200/json">https://httputil.dev/200/json</a></span> # Accept header will be ignored
 {"message":"OK"}
 
+## Get MessagePack response
+<span class="cmd">$ curl -H 'Accept:application/msgpack' <a href="/200">https://httputil.dev/200</a> | msgpack2json</span>
+# or
+<span class="cmd">$ curl <a href="/200/msgpack">https://httputil.dev/200/msgpack</a> | msgpack2json</span> # Accept header will be ignored
+{"message":"OK"}
+
 ## Get XML response</span>
 <span class="cmd">$ curl <a href="/200/xml">https://httputil.dev/200/xml</a></span>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;HTTPStatusResponse&gt;&lt;Message&gt;OK&lt;/Message&gt;&lt;/HTTPStatusResponse&gt;
 
+## get `pretty` output
+<span class="cmd">$ curl <a href="/200/xml?pretty">https://httputil.dev/200/xml?pretty</a></span>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;HTTPStatusResponse&gt;
+  &lt;Message&gt;OK&lt;/Message&gt;
+&lt;/HTTPStatusResponse&gt;
+</pre>
+
+<pre class="code">
 <span class="comment"># Also available at httputil.com</span>
 <span class="cmd">$ curl <a href="https://httputil.com/200">https://httputil.com/200</a></span>
 OK
