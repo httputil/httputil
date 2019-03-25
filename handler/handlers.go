@@ -82,10 +82,20 @@ func HandleIP(c echo.Context) error {
 		resp.Host = hosts[0]
 	}
 
-	return c.JSON(http.StatusOK, resp)
+	format := c.Param("format")
+	switch format {
+	case "text", "plain", "txt":
+		return c.String(http.StatusOK, resp.String())
+	default:
+		return c.JSON(http.StatusOK, resp)
+	}
 }
 
 type IPResponse struct {
 	Host string `json:"host"`
 	IP   string `json:"ip"`
+}
+
+func (r IPResponse) String() string {
+	return r.Host + "\t" + r.IP
 }
